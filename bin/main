@@ -1,0 +1,63 @@
+#!/bin/bash
+
+PARENT_PROCESS=$(ps -o comm= $PPID) 
+EXECUTION_PATH=$(cd `dirname $0` && pwd)
+DOCKER_CMD=$1
+DOCKER_CONTAINER=$2
+
+COMMANDS=("pull" "up" "start" "stop" "rm" "clean" "exec COMMAND [ARGS]" "logs" "ps" "cp FILE CONTAINER_DIRECTORY")
+
+function usage() {
+   printf '%s\n\t' "Usage: $0 " "${COMMANDS[@]}"
+}
+
+case $DOCKER_CMD in
+  pull)
+    $EXECUTION_PATH/docker-utils pull $DOCKER_CONTAINER
+    ;;
+  up)
+    $EXECUTION_PATH/docker-utils up $DOCKER_CONTAINER
+    ;;
+  start)
+    $EXECUTION_PATH/docker-utils start $DOCKER_CONTAINER
+    ;;
+  stop)
+    $EXECUTION_PATH/docker-utils stop $DOCKER_CONTAINER
+    ;;
+  rm)
+    $EXECUTION_PATH/docker-utils rm $DOCKER_CONTAINER
+    ;;
+  clean)
+    $EXECUTION_PATH/docker-utils clean $DOCKER_CONTAINER
+    ;;
+  exec)
+    CONTAINER_CMD=$3
+    ARGUMENTS=($@)
+    ARGUMENTS=(${ARGUMENTS[@]:3})
+    
+    if [ ! -z "$ARGUMENTS" ]; then
+      $EXECUTION_PATH/docker-utils exec $DOCKER_CONTAINER $CONTAINER_CMD ${ARGUMENTS[@]}
+    else
+      $EXECUTION_PATH/docker-utils exec $DOCKER_CONTAINER $CONTAINER_CMD
+    fi
+    ;;
+  logs)
+    $EXECUTION_PATH/docker-utils logs $DOCKER_CONTAINER
+    ;;
+  ps)
+    $EXECUTION_PATH/docker-utils ps $DOCKER_CONTAINER
+    ;;
+  cp)
+    FILE=$3
+    CONTAINER_DIRECTORY=$4
+    
+    $EXECUTION_PATH/docker-utils cp $DOCKER_CONTAINER $FILE $CONTAINER_DIRECTORY
+    ;;
+  *)
+    if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]]; then
+      $EXECUTION_PATH/docker-utils usage
+    else
+      usage
+    fi
+    exit 1
+esac

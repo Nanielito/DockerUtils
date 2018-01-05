@@ -1,0 +1,15 @@
+#!/bin/bash
+
+EXECUTION_PATH=$(cd `dirname $0` && pwd)
+EXECUTABLE_NAME=$1
+EXECUTABLE_DIR=$2
+
+if [ -z "$EXECUTABLE_DIR" ]; then
+  EXECUTABLE_DIR="general"
+fi
+
+cd $EXECUTION_PATH/..
+mkdir -p $EXECUTABLE_DIR
+
+sed "s/CONTAINER_NAME/$EXECUTABLE_NAME/g" templates/template > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+chmod 755 $EXECUTABLE_DIR/$EXECUTABLE_NAME
