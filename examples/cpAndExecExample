@@ -1,8 +1,7 @@
 #!/bin/bash
 
 IMAGE_EXT=$1
-DOCKER_CONTAINER=$2
-IMAGE_DIRECTORY=$3
+IMAGE_DIRECTORY=$2
 INPUT_TRAY="/opt/jboss/welcome-content/input-tray"
 
 if [ -z "$IMAGE_EXT" ]; then
@@ -23,12 +22,12 @@ RANDOM=$$$(date +%s)
 IMAGE=${IMAGES[$RANDOM % ${#IMAGES[@]}]}
 
 echo "Coping $IMAGE to $DOCKER_CONTAINER:$INPUT_TRAY ..."
-./main cp $DOCKER_CONTAINER $IMAGE $INPUT_TRAY
+./wildfly-server cp $IMAGE $INPUT_TRAY
 
 FILE_END="$(echo $IMAGE | rev | cut -d'/' -f1 | rev)"
 IMAGE_EXT_LEN=$(echo -n $IMAGE_EXT | wc -c)
 FILE_END="${FILE_END::-$IMAGE_EXT_LEN}end"
 
 echo "Creating the .end file $FILE_END on $INPUT_TRAY ..."
-./main exec $DOCKER_CONTAINER bash "cd $INPUT_TRAY; touch $FILE_END" 
+./wildfly-server exec bash "cd $INPUT_TRAY; touch $FILE_END" 
 

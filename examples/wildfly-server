@@ -1,0 +1,10 @@
+#!/bin/bash
+
+EXECUTION_PATH=$(cd `dirname $0` && pwd)
+DOCKER_CMD=$1
+DOCKER_CONTAINER="wildfly-server"
+DOCKER_ARGS1=$2
+DOCKER_ARGS2=$3
+
+cd $EXECUTION_PATH/..
+bash bin/main $DOCKER_CMD $DOCKER_CONTAINER $DOCKER_ARGS1 $DOCKER_ARGS2
