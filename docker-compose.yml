@@ -1,0 +1,35 @@
+version: '3.2'
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d    
+    container_name: mongoservice
+    hostname: mongoservice
+    networks:
+      - generalnet
+    ports:
+      - 27017:27017 # Port used by mongodb to conecctions from clients.
+  mysql-server:
+    image: mysql/mysql-server
+    container_name: mysql-server
+    hostname: mysql-server
+    networks:
+      - generalnet
+  wildfly-server:
+    image: jboss/wildfly
+    volumes:
+      - ./volumes/deployments:/opt/jboss/wildfly/standalone/deployments
+    container_name: wildfly-server
+    hostname: wildfly-server
+    networks:
+      - generalnet
+    ports:
+      - 8080:8080
+      - 9990:9990
+networks:
+  generalnet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.32.0.0/24
