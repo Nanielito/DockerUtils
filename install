@@ -1,0 +1,16 @@
+#!/bin/bash
+
+EXECUTION_PATH=$(cd `dirname $0` && pwd)
+DOCKER_COMPOSE_DIRECTORY=$1
+
+function usage() {
+  echo "Usage: $0 DOCKER_COMPOSE_DIRECTORY"
+}
+
+if [ -z "$DOCKER_COMPOSE_DIRECTORY" ]; then
+  usage
+  exit 1
+fi
+
+echo "Copying files to $DOCKER_COMPOSE_DIRECTORY ..."
+cp -r $EXECUTION_PATH/bin $EXECUTION_PATH/examples $EXECUTION_PATH/templates $DOCKER_COMPOSE_DIRECTORY
