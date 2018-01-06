@@ -1,15 +1,60 @@
 #!/bin/bash
 
 EXECUTION_PATH=$(cd `dirname $0` && pwd)
-EXECUTABLE_NAME=$1
-EXECUTABLE_DIR=$2
 
-if [ -z "$EXECUTABLE_DIR" ]; then
-  EXECUTABLE_DIR="general"
+OPTS=`getopt -o hn:d:t: --long help,name:,directory:,type: -n 'parse-options' -- "$@"`
+EXECUTABLE_NAME="app"
+EXECUTABLE_DIR="general"
+TEMPLATE_TYPE="specific"
+TEMPLATE_FILE=""
+
+COMMANDS=("-h | --help" "-n | --name EXECUTABLE_NAME" "-d | --directory EXECUTABLE_DIRECTORY" "-t | --type TEMPLATE_TYPE=[generic|specific]")
+
+eval set -- "$OPTS"
+
+function usage() {
+  printf '%s\n\t' "Usage: $0" "${COMMANDS[@]}"
+}
+
+if [ $? != 0 ]; then
+  usage
+  exit 1
 fi
+
+while true
+  do
+    case "$1" in
+      -h | --help)
+        usage; exit 0 ;;
+      -n | --name)
+        EXECUTABLE_NAME=$2; shift 2 ;;
+      -d | --directory)
+        EXECUTABLE_DIR=$2; shift 2 ;;
+      -t | --type)
+        case "$2" in
+          generic | specific)
+            TEMPLATE_TYPE=$2; shift 2 ;;
+          *)
+            usage; exit 1 ;;
+        esac ;;
+      --)
+        shift; break ;;
+      *)
+        usage; exit 1 ;;
+    esac
+  done
 
 cd $EXECUTION_PATH/..
 mkdir -p $EXECUTABLE_DIR
 
-sed "s/CONTAINER_NAME/$EXECUTABLE_NAME/g" templates/template > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+echo "Creating executable $EXECUTABLE_NAME into $EXECUTABLE_DIR directory ..."
+
+if [ "$TEMPLATE_TYPE" = "specific" ]; then
+  sed "s/CONTAINER_NAME/$EXECUTABLE_NAME/g" templates/specificTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+else
+  cat templates/genericTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+fi
+
 chmod 755 $EXECUTABLE_DIR/$EXECUTABLE_NAME
+
+echo "Executable $EXECUTABLE_NAME was created"
