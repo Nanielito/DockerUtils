@@ -6,9 +6,13 @@ OPTS=`getopt -o hn:d:t: --long help,name:,directory:,type: -n 'parse-options' --
 EXECUTABLE_NAME="app"
 EXECUTABLE_DIR="general"
 TEMPLATE_TYPE="specific"
-TEMPLATE_FILE=""
 
-COMMANDS=("-h | --help" "-n | --name EXECUTABLE_NAME" "-d | --directory EXECUTABLE_DIRECTORY" "-t | --type TEMPLATE_TYPE=[generic|specific]")
+COMMANDS=(                                       \
+  "-h | --help"                                  \
+  "-n | --name EXECUTABLE_NAME"                  \
+  "-d | --directory EXECUTABLE_DIRECTORY"        \
+  "-t | --type TEMPLATE_TYPE=[generic|specific]" \
+)
 
 eval set -- "$OPTS"
 
