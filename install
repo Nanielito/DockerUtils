@@ -1,15 +1,40 @@
 #!/bin/bash
 
 EXECUTION_PATH=$(cd `dirname $0` && pwd)
-DOCKER_COMPOSE_DIRECTORY=$1
+
+OPTS=`getopt -o hd: --long help,directory: -n 'parse-options' -- "$@"`
+DOCKER_COMPOSE_DIRECTORY=""
+
+COMMANDS=("-h | --help" "-d | --directory DOCKER_COMPOSE_DIRECTORY")
+
+eval set -- "$OPTS"
 
 function usage() {
-  echo "Usage: $0 DOCKER_COMPOSE_DIRECTORY"
+  printf '%s\n\t' "Usage: $0" "${COMMANDS[@]}"
 }
 
-if [ -z "$DOCKER_COMPOSE_DIRECTORY" ]; then
+if [ $? != 0 ]; then
   usage
   exit 1
+fi
+
+while true
+  do
+    case "$1" in
+      -h | --help)
+        usage; exit 0 ;;
+      -d | --directory)
+        DOCKER_COMPOSE_DIRECTORY=$2; shift 2 ;;
+      --)
+        shift; break ;;
+      *)
+        usage; exit 1 ;;
+    esac
+  done
+
+if [ ! -d "$DOCKER_COMPOSE_DIRECTORY" ]; then
+  echo "$DOCKER_COMPOSE_DIRECTORY does not exist"
+  exit 0
 fi
 
 echo "Copying files to $DOCKER_COMPOSE_DIRECTORY ..."
