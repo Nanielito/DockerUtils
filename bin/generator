@@ -3,18 +3,17 @@
 EXECUTION_PATH=$(cd `dirname $0` && pwd)
 
 OPTS=`getopt -o hn:d:t: --long help,name:,directory:,type: -n 'parse-options' -- "$@"`
+eval set -- "$OPTS"
+
 EXECUTABLE_NAME="app"
 EXECUTABLE_DIR="general"
 TEMPLATE_TYPE="specific"
 
 COMMANDS=(                                       \
-  "-h | --help"                                  \
   "-n | --name EXECUTABLE_NAME"                  \
   "-d | --directory EXECUTABLE_DIRECTORY"        \
   "-t | --type TEMPLATE_TYPE=[generic|specific]" \
 )
-
-eval set -- "$OPTS"
 
 function usage() {
   printf '%s\n\t' "Usage: $0" "${COMMANDS[@]}"

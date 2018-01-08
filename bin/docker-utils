@@ -1,9 +1,10 @@
 #!/bin/bash
 
 DOCKER_CMD=$1
-DOCKER_CONTAINER=$2
+DOCKER_CONTAINER=($@)
+DOCKER_CONTAINER=(${DOCKER_CONTAINER[@]:1})
 
-COMMANDS=(\
+COMMANDS=(                                        \
   "pull  [CONTAINER_NAME|...]"                    \
   "up    [CONTAINER_NAME|...]"                    \
   "start [CONTAINER_NAME|...]"                    \
@@ -22,50 +23,51 @@ function usage() {
 
 case $DOCKER_CMD in
   pull)
-    if [ ! -z "$DOCKER_CONTAINER" ];then
-      docker-compose pull $CONTAINER_NAME
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose pull ${CONTAINER_NAME[@]}
     else
       docker-compose pull
     fi
     ;;
   up)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose up -d $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose up -d ${DOCKER_CONTAINER[@]}
     else
       docker-compose up -d
     fi
     ;;
   start)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose start $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose start ${DOCKER_CONTAINER[@]}
     else
       docker-compose start
     fi
     ;;
   stop)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose stop $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose stop ${DOCKER_CONTAINER[@]}
     else
       docker-compose stop
     fi
     ;;
   rm)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose rm -f $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose rm -f ${DOCKER_CONTAINER[@]}
     else
       docker-compose rm -f
     fi
     ;;
   clean)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose stop $DOCKER_CONTAINER
-      docker-compose rm -f $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose stop ${DOCKER_CONTAINER[@]}
+      docker-compose rm -f ${DOCKER_CONTAINER[@]}
     else
       docker-compose stop
       docker-compose rm -f
     fi
     ;;
   exec)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[1]}
     CONTAINER_CMD=$3
     ARGUMENTS=($@)
     ARGUMENTS=(${ARGUMENTS[@]:3})
@@ -82,20 +84,21 @@ case $DOCKER_CMD in
     fi
     ;;
   logs)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose logs -f $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose logs -f ${DOCKER_CONTAINER[@]}
     else
       docker-compose logs -f
     fi
     ;;
   ps)
-    if [ ! -z "$DOCKER_CONTAINER" ]; then
-      docker-compose ps $DOCKER_CONTAINER
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose ps ${DOCKER_CONTAINER[@]}
     else
       docker-compose ps
     fi
     ;;
   cp)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[1]}
     FILE=$3
     CONTAINER_DIRECTORY=$4
     
