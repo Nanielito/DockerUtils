@@ -10,6 +10,7 @@ COMMANDS=(                      \
   "pull"                        \
   "up"                          \
   "start"                       \
+  "restart"                     \
   "stop"                        \
   "rm"                          \
   "clean"                       \
@@ -57,6 +58,9 @@ case $DOCKER_CMD in
     ;;
   start)
     $EXECUTION_PATH/docker-utils start ${DOCKER_CONTAINER[@]}
+    ;;
+  restart)
+    $EXECUTION_PATH/docker-utils restart ${DOCKER_CONTAINER[@]}
     ;;
   stop)
     $EXECUTION_PATH/docker-utils stop ${DOCKER_CONTAINER[@]}

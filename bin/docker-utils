@@ -4,17 +4,18 @@ DOCKER_CMD=$1
 DOCKER_CONTAINER=($@)
 DOCKER_CONTAINER=(${DOCKER_CONTAINER[@]:1})
 
-COMMANDS=(                                        \
-  "pull  [CONTAINER_NAME|...]"                    \
-  "up    [CONTAINER_NAME|...]"                    \
-  "start [CONTAINER_NAME|...]"                    \
-  "stop  [CONTAINER_NAME|...]"                    \
-  "rm    [CONTAINER_NAME|...]"                    \
-  "clean [CONTAINER_NAME|...]"                    \
-  "exec  CONTAINER_NAME COMMAND [ARGS]"           \
-  "logs  [CONTAINER_NAME|...]"                    \
-  "ps    [CONTAINER_NAME]"                        \
-  "cp    CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+COMMANDS=(                                          \
+  "pull    [CONTAINER_NAME|...]"                    \
+  "up      [CONTAINER_NAME|...]"                    \
+  "start   [CONTAINER_NAME|...]"                    \
+  "restart [CONTAINER_NAME|...]"                    \
+  "stop    [CONTAINER_NAME|...]"                    \
+  "rm      [CONTAINER_NAME|...]"                    \
+  "clean   [CONTAINER_NAME|...]"                    \
+  "exec    CONTAINER_NAME COMMAND [ARGS]"           \
+  "logs    [CONTAINER_NAME|...]"                    \
+  "ps      [CONTAINER_NAME]"                        \
+  "cp      CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
 )
 
 function usage() {
@@ -41,6 +42,13 @@ case $DOCKER_CMD in
       docker-compose start ${DOCKER_CONTAINER[@]}
     else
       docker-compose start
+    fi
+    ;;
+  restart)
+    if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
+      docker-compose restart ${DOCKER_CONTAINER[@]}
+    else
+      docker-compose restart
     fi
     ;;
   stop)
