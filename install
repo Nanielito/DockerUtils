@@ -13,7 +13,7 @@ function usage() {
   printf '%s\n\t' "Usage: $0" "${COMMANDS[@]}"
 }
 
-if [[ $? != 0 ]] || [[ $# = 1 ]]; then
+if [[ $# = 1 ]]; then
   usage
   exit 1
 fi
