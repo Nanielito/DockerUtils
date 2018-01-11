@@ -23,10 +23,10 @@
     ```sh
     $ bin/generator -n EXECUTABLE_NAME -d EXECUTABLE_DIRECTORY -t TEMPLATE_TYPE
     ```
-    ##### (*) Notes:
-    * `EXECUTABLE_NAME must be defined as a service in your docker-compose.yml file.`
-    * `EXECUTABLE_DIRECTORY must be a directory path inside your docker compose configuration directory.`
-    * `TEMPLATE_TYPE must be 'specific' (default value) or 'generic'.`
+##### (*) Notes:
+  * `EXECUTABLE_NAME must be defined as a service in your docker-compose.yml file.`
+  * `EXECUTABLE_DIRECTORY must be a directory path inside your docker compose configuration directory.`
+  * `TEMPLATE_TYPE must be 'specific' (default value) or 'generic'.`
     
 # Examples
 If there is a service named app in your docker-compose.yml file, you can create a script for app:
