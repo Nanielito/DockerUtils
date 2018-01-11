@@ -21,7 +21,7 @@ IMAGES=$(eval "ls $IMAGE_DIRECTORY/*.$IMAGE_EXT")
 IMAGE=${IMAGES[$((RANDOM % ${#IMAGES[@]}))]}
 
 echo "Coping $IMAGE to $DOCKER_CONTAINER:$INPUT_TRAY ..."
-$EXECUTION_PATH/wildfly-server cp $IMAGE $INPUT_TRAY
+$EXECUTION_PATH/wildfly-server set $IMAGE $INPUT_TRAY
 
 FILE_END="$(echo $IMAGE | rev | cut -d'/' -f1 | rev)"
 IMAGE_EXT_LEN=$(echo -n $IMAGE_EXT | wc -c)
