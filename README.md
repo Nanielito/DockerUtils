@@ -46,7 +46,8 @@ $ bin/app clean
 $ bin/app exec COMMAND [ARGS]
 $ bin/app logs
 $ bin/app ps
-$ bin/app cp FILE CONTAINER_DIRECTORY
+$ bin/app set FILE CONTAINER_DIRECTORY
+$ bin/app get CONTAINER_FILE DIRECTORY
 ```
 ##### (*) Notes:
 `Previous commands run over the 'app' service defined in your docker-compose.yml file.`
@@ -77,8 +78,23 @@ $ bin/app clean   [CONTAINER_NAME|...]
 $ bin/app exec    CONTAINER_NAME COMMAND [ARGS]
 $ bin/app logs    [CONTAINER_NAME|...]
 $ bin/app ps      [CONTAINER_NAME]
-$ bin/app cp      CONTAINER_NAME FILE CONTAINER_DIRECTORY
+$ bin/app set     CONTAINER_NAME FILE CONTAINER_DIRECTORY
+$ bin/app get     CONTAINER_NAME CONTAINER_FILE DIRECTORY
 ```
+
+# Commands
+* **pull**: Pulls the docker image related to a service defined in your docker-compose.yml file.
+* **up**: Creates and runs the container related to a docker image (in detach mode).
+* **start**: Starts a container.
+* **restart**: Restarts a container.
+* **stop**: Stops a container.
+* **rm**: Removes a container.
+* **clean**: Stops and removes a container.
+* **exec**: Executes a container command.
+* **logs**: Displays the log file related to a container.
+* **ps**: Displays the process status related to a container.
+* **set**: Transfers a file to a container using docker cp.
+* **get**: Transfer a file from a container using docker cp.
 
 [//]: # (Reference links)
 [docker]: <https://docs.docker.com/engine/installation/#server>
