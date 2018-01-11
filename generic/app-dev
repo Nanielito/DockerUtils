@@ -1,10 +1,45 @@
 #!/bin/bash
 
 EXECUTION_PATH=$(cd `dirname $0` && pwd)
+
+OPTS=`getopt -o h --long help -- "$@"`
+eval set -- "$OPTS"
+
+SPECIFIC_COMMANDS=(                      
+  "pull"                         
+  "up"                           
+  "start"                        
+  "restart"                      
+  "stop"                         
+  "rm"                           
+  "clean"                        
+  "exec COMMAND [ARGS]"          
+  "logs"                         
+  "ps"                           
+  "set FILE CONTAINER_DIRECTORY" 
+  "get CONTAINER_FILE DIRECTORY" 
+)
+
+function usage() {
+  printf '%s\n\t' "Usage: $0" "${SPECIFIC_COMMANDS[@]}"
+}
+
+while true
+  do
+    case "$1" in
+      -h | --help)
+        usage; exit 0 ;;
+      --)
+        shift; break ;;
+      *)
+        shift; break ;;
+    esac
+  done
+
 DOCKER_CMD=$1
 DOCKER_CONTAINER="app-dev"
 DOCKER_ARGS1=$2
 DOCKER_ARGS2=$3
 
 cd $EXECUTION_PATH/..
-bash bin/main $DOCKER_CMD $DOCKER_CONTAINER $DOCKER_ARGS1 $DOCKER_ARGS2 --caller specific
+bash bin/main $DOCKER_CMD $DOCKER_CONTAINER $DOCKER_ARGS1 $DOCKER_ARGS2 --script-type specific
