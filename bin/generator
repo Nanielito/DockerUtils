@@ -19,7 +19,7 @@ function usage() {
   printf '%s\n\t' "Usage: $0" "${COMMANDS[@]}"
 }
 
-if [ $? != 0 ]; then
+if [[ $# = 1 ]]; then
   usage
   exit 1
 fi
@@ -52,10 +52,12 @@ mkdir -p $EXECUTABLE_DIR
 
 echo "Creating executable $EXECUTABLE_NAME into $EXECUTABLE_DIR directory ..."
 
-if [ "$TEMPLATE_TYPE" = "specific" ]; then
-  sed "s/CONTAINER_NAME/$EXECUTABLE_NAME/g" templates/specificTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+if [ "$TEMPLATE_TYPE" = "generic" ]; then
+  COMMANDS_STRING=$(sed -n '/GENERIC_COMMANDS=/,/)/p' bin/main)
+  sed "s/#GENERIC_COMMANDS/$COMMANDS_STRING/g" templates/genericTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
 else
-  cat templates/genericTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
+  COMMANDS_STRING=$(sed -n '/SPECIFIC_COMMANDS=/,/)/p' bin/main)
+  sed "s/#SPECIFIC_COMMANDS/$COMMANDS_STRING/g; s/CONTAINER_NAME/$EXECUTABLE_NAME/g" templates/specificTemplate > $EXECUTABLE_DIR/$EXECUTABLE_NAME
 fi
 
 chmod 755 $EXECUTABLE_DIR/$EXECUTABLE_NAME

@@ -15,7 +15,8 @@ COMMANDS=(                                          \
   "exec    CONTAINER_NAME COMMAND [ARGS]"           \
   "logs    [CONTAINER_NAME|...]"                    \
   "ps      [CONTAINER_NAME]"                        \
-  "cp      CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+  "set     CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+  "get     CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
 )
 
 function usage() {
@@ -105,12 +106,19 @@ case $DOCKER_CMD in
       docker-compose ps
     fi
     ;;
-  cp)
+  set)
     DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
     FILE=$3
     CONTAINER_DIRECTORY=$4
     
     docker cp $FILE $DOCKER_CONTAINER:$CONTAINER_DIRECTORY
+    ;;
+  get)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
+    CONTAINER_FILE=$3
+    DIRECTORY=$4
+    
+    docker cp $DOCKER_CONTAINER:$CONTAINER_FILE $DIRECTORY
     ;;
   *)
     usage

@@ -3,41 +3,63 @@
 PARENT_PROCESS=$(ps -o comm= $PPID) 
 EXECUTION_PATH=$(cd `dirname $0` && pwd)
 
-OPTS=`getopt -o h,c: --long help,caller: -n 'parse-options' -- "$@"`
+OPTS=`getopt -o h,st: --long help,script-type: -n 'parse-options' -- "$@"`
 eval set -- "$OPTS"
 
-COMMANDS=(                      \
-  "pull"                        \
-  "up"                          \
-  "start"                       \
-  "restart"                     \
-  "stop"                        \
-  "rm"                          \
-  "clean"                       \
-  "exec COMMAND [ARGS]"         \
-  "logs"                        \
-  "ps"                          \
-  "cp FILE CONTAINER_DIRECTORY" \
+#GENERIC_COMMANDS_START
+GENERIC_COMMANDS=(                                          \
+  "pull    [CONTAINER_NAME|...]"                    \
+  "up      [CONTAINER_NAME|...]"                    \
+  "start   [CONTAINER_NAME|...]"                    \
+  "restart [CONTAINER_NAME|...]"                    \
+  "stop    [CONTAINER_NAME|...]"                    \
+  "rm      [CONTAINER_NAME|...]"                    \
+  "clean   [CONTAINER_NAME|...]"                    \
+  "exec    CONTAINER_NAME COMMAND [ARGS]"           \
+  "logs    [CONTAINER_NAME|...]"                    \
+  "ps      [CONTAINER_NAME]"                        \
+  "set     CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+  "get     CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
 )
+#GENERIC_COMMANDS_END
 
-function usage() {
-   printf '%s\n\t' "Usage: $0 " "${COMMANDS[@]}"
+#SPECIFIC_COMMANDS_START
+SPECIFIC_COMMANDS=(                      \
+  "pull"                         \
+  "up"                           \
+  "start"                        \
+  "restart"                      \
+  "stop"                         \
+  "rm"                           \
+  "clean"                        \
+  "exec COMMAND [ARGS]"          \
+  "logs"                         \
+  "ps"                           \
+  "set FILE CONTAINER_DIRECTORY" \
+  "get CONTAINER_FILE DIRECTORY" \
+)
+#SPECIFIC_COMMANDS_ENDS
+
+function genericUsage() {
+   printf '%s\n\t' "Usage: $0 " "${GENERIC_COMMANDS[@]}"
 }
 
-SCRIPT_CALLER=""
+function specificUsage() {
+   printf '%s\n\t' "Usage: $0 " "${SPECIFIC_COMMANDS[@]}"
+}
+
+SCRIPT_TYPE=""
 
 while true
   do
     case "$1" in
       -h | --help) 
-        if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]] || [[ $@ =~ (--caller generic) ]]; then
-          $EXECUTION_PATH/docker-utils usage
-        else
-          usage
+        if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]]; then
+          genericUsage
         fi
         exit 0 ;;
-      -c | --caller)
-        SCRIPT_CALLER=$2; shift 2 ;;
+      -st | --script-type)
+        SCRIPT_TYPE=$2; shift 2 ;;
       --)
         shift; break ;;
       *)
@@ -89,18 +111,26 @@ case $DOCKER_CMD in
   ps)
     $EXECUTION_PATH/docker-utils ps ${DOCKER_CONTAINER[@]}
     ;;
-  cp)
+  set)
     DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
     FILE=$3
     CONTAINER_DIRECTORY=$4
     
-    $EXECUTION_PATH/docker-utils cp $DOCKER_CONTAINER $FILE $CONTAINER_DIRECTORY
+    $EXECUTION_PATH/docker-utils set $DOCKER_CONTAINER $FILE $CONTAINER_DIRECTORY
+    ;;
+  get)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
+    CONTAINER_FILE=$3
+    DIRECTORY=$4
+
+    $EXECUTION_PATH/docker-utils get $DOCKER_CONTAINER $DOCKER_FILE $DIRECTORY
     ;;
   *)
-    if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]] || [ "$SCRIPT_CALLER" = "generic" ]; then
-      $EXECUTION_PATH/docker-utils usage
-    else
-      usage
+    if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]]; then
+      genericUsage
+    elif [[ $SCRIPT_TYPE =~ (generic|specific) ]]; then
+      PARENT_PROCESS=($(ps -o args= $PPID | cut -d' ' -f2))
+      $PARENT_PROCESS -h
     fi
     exit 1
 esac
