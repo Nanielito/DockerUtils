@@ -26,7 +26,7 @@ function usage() {
 case $DOCKER_CMD in
   pull)
     if [ ! -z "$(echo ${DOCKER_CONTAINER[@]})" ]; then
-      docker-compose pull ${CONTAINER_NAME[@]}
+      docker-compose pull ${DOCKER_CONTAINER[@]}
     else
       docker-compose pull
     fi
