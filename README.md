@@ -96,8 +96,8 @@ $ bin/app get     CONTAINER_NAME CONTAINER_FILE DIRECTORY
 * **exec**: Executes a container command.
 * **logs**: Displays the log file related to a container.
 * **ps**: Displays the process status related to a container.
-* **set**: Transfers a file to a container using docker cp.
-* **get**: Transfers a file from a container using docker cp.
+* **set**: Copies a local file to a container using docker cp.
+* **get**: Retrieves a file from a container using docker cp.
 
 [//]: # (Reference links)
 [docker]: <https://docs.docker.com/engine/installation/#server>
