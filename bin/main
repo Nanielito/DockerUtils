@@ -7,7 +7,7 @@ OPTS=`getopt -o h,st: --long help,script-type: -n 'parse-options' -- "$@"`
 eval set -- "$OPTS"
 
 #GENERIC_COMMANDS_START
-GENERIC_COMMANDS=(                                          \
+GENERIC_COMMANDS=(                                  \
   "pull    [CONTAINER_NAME|...]"                    \
   "up      [CONTAINER_NAME|...]"                    \
   "start   [CONTAINER_NAME|...]"                    \
@@ -24,7 +24,7 @@ GENERIC_COMMANDS=(                                          \
 #GENERIC_COMMANDS_END
 
 #SPECIFIC_COMMANDS_START
-SPECIFIC_COMMANDS=(                      \
+SPECIFIC_COMMANDS=(              \
   "pull"                         \
   "up"                           \
   "start"                        \
@@ -63,14 +63,14 @@ while true
       --)
         shift; break ;;
       *)
-        shift; break ;;
+        shift; break ;; # TODO: Validate cases for exec when a user calls a command using flags
     esac
   done
 
 DOCKER_CMD=$1
 DOCKER_CONTAINER=($@)
 DOCKER_CONTAINER=(${DOCKER_CONTAINER[@]:1})
-
+echo $DOCKER_CMD $DOCKER_CONTAINER
 case $DOCKER_CMD in
   pull)
     $EXECUTION_PATH/docker-utils pull ${DOCKER_CONTAINER[@]}
@@ -115,15 +115,15 @@ case $DOCKER_CMD in
     DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
     FILE=$3
     CONTAINER_DIRECTORY=$4
-    
+
     $EXECUTION_PATH/docker-utils set $DOCKER_CONTAINER $FILE $CONTAINER_DIRECTORY
     ;;
   get)
     DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
     CONTAINER_FILE=$3
     DIRECTORY=$4
-
-    $EXECUTION_PATH/docker-utils get $DOCKER_CONTAINER $DOCKER_FILE $DIRECTORY
+    
+    $EXECUTION_PATH/docker-utils get $DOCKER_CONTAINER $CONTAINER_FILE $DIRECTORY
     ;;
   *)
     if [[ $PARENT_PROCESS =~ ((^(bash|fish)$)) ]]; then

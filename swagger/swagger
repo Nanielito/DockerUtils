@@ -1,0 +1,42 @@
+#!/bin/bash
+
+EXECUTION_PATH=$(cd `dirname $0` && pwd)
+
+OPTS=`getopt -o h --long help -- "$@"`
+eval set -- "$OPTS"
+
+GENERIC_COMMANDS=(                                          
+  "pull    [CONTAINER_NAME|...]"                    
+  "up      [CONTAINER_NAME|...]"                    
+  "start   [CONTAINER_NAME|...]"                    
+  "restart [CONTAINER_NAME|...]"                    
+  "stop    [CONTAINER_NAME|...]"                    
+  "rm      [CONTAINER_NAME|...]"                    
+  "clean   [CONTAINER_NAME|...]"                    
+  "exec    CONTAINER_NAME COMMAND [ARGS]"           
+  "logs    [CONTAINER_NAME|...]"                    
+  "ps      [CONTAINER_NAME]"                        
+  "set     CONTAINER_NAME FILE CONTAINER_DIRECTORY" 
+  "get     CONTAINER_NAME CONTAINER_FILE DIRECTORY" 
+)
+
+function usage() {
+  printf '%s\n\t' "Usage: $0" "${GENERIC_COMMANDS[@]}"
+}
+
+while true
+  do
+    case "$1" in
+      -h | --help)
+        usage; exit 0 ;;
+      --)
+        shift; break ;;
+      *)
+        shift; break ;;
+    esac
+  done
+
+DOCKER_ARGS=$@
+
+cd $EXECUTION_PATH/..
+bash bin/main $DOCKER_ARGS --script-type generic

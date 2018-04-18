@@ -27,9 +27,27 @@ services:
     ports:
       - "8080:8080"
       - "9990:9990"
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    volumes:
+      - ./swagger/scripts:/usr/share/ngnix/html/scripts
+    container_name: swagger-editor
+    hostname: swagger
+    networks:
+      - generalnet
+    ports:
+      - "83:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    hostname: swagger
+    networks:
+      - generalnet
+    ports:
+      - "84:8080"
 networks:
   generalnet:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.32.0.0/24
+      - subnet: 172.32.5.0/24
