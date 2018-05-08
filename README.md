@@ -71,18 +71,19 @@ $ bin/generator -n app -d myapp -t generic
 ```
 Then, you can call regular docker commands as follows:
 ```sh
-$ bin/app pull    [CONTAINER_NAME|...]
-$ bin/app up      [CONTAINER_NAME|...]
-$ bin/app start   [CONTAINER_NAME|...]
-$ bin/app restart [CONTAINER_NAME|...]
-$ bin/app stop    [CONTAINER_NAME|...]
-$ bin/app rm      [CONTAINER_NAME|...]
-$ bin/app clean   [CONTAINER_NAME|...]
-$ bin/app exec    CONTAINER_NAME COMMAND [ARGS]
-$ bin/app logs    [CONTAINER_NAME|...]
-$ bin/app ps      [CONTAINER_NAME]
-$ bin/app set     CONTAINER_NAME FILE CONTAINER_DIRECTORY
-$ bin/app get     CONTAINER_NAME CONTAINER_FILE DIRECTORY
+$ bin/app pull       [CONTAINER_NAME|...]
+$ bin/app up         [CONTAINER_NAME|...]
+$ bin/app start      [CONTAINER_NAME|...]
+$ bin/app restart    [CONTAINER_NAME|...]
+$ bin/app stop       [CONTAINER_NAME|...]
+$ bin/app rm         [CONTAINER_NAME|...]
+$ bin/app clean      [CONTAINER_NAME|...]
+$ bin/app execAsRoot CONTAINER_NAME COMMAND [ARGS
+$ bin/app exec       CONTAINER_NAME COMMAND [ARGS]
+$ bin/app logs       [CONTAINER_NAME|...]
+$ bin/app ps         [CONTAINER_NAME]
+$ bin/app set        CONTAINER_NAME FILE CONTAINER_DIRECTORY
+$ bin/app get        CONTAINER_NAME CONTAINER_FILE DIRECTORY
 ```
 
 # Commands
@@ -93,6 +94,7 @@ $ bin/app get     CONTAINER_NAME CONTAINER_FILE DIRECTORY
 * **stop**: Stops a container.
 * **rm**: Removes a container.
 * **clean**: Stops and removes a container.
+* **execAsRoot**: Executes a container command as the root user.
 * **exec**: Executes a container command.
 * **logs**: Displays the log file related to a container.
 * **ps**: Displays the process status related to a container.
