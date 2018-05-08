@@ -4,19 +4,20 @@ DOCKER_CMD=$1
 DOCKER_CONTAINER=($@)
 DOCKER_CONTAINER=(${DOCKER_CONTAINER[@]:1})
 
-COMMANDS=(                                          \
-  "pull    [CONTAINER_NAME|...]"                    \
-  "up      [CONTAINER_NAME|...]"                    \
-  "start   [CONTAINER_NAME|...]"                    \
-  "restart [CONTAINER_NAME|...]"                    \
-  "stop    [CONTAINER_NAME|...]"                    \
-  "rm      [CONTAINER_NAME|...]"                    \
-  "clean   [CONTAINER_NAME|...]"                    \
-  "exec    CONTAINER_NAME COMMAND [ARGS]"           \
-  "logs    [CONTAINER_NAME|...]"                    \
-  "ps      [CONTAINER_NAME]"                        \
-  "set     CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
-  "get     CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
+COMMANDS=(                                             \
+  "pull       [CONTAINER_NAME|...]"                    \
+  "up         [CONTAINER_NAME|...]"                    \
+  "start      [CONTAINER_NAME|...]"                    \
+  "restart    [CONTAINER_NAME|...]"                    \
+  "stop       [CONTAINER_NAME|...]"                    \
+  "rm         [CONTAINER_NAME|...]"                    \
+  "clean      [CONTAINER_NAME|...]"                    \
+  "execAsRoot CONTAINER_NAME COMMAND [ARGS]"           \
+  "exec       CONTAINER_NAME COMMAND [ARGS]"           \
+  "logs       [CONTAINER_NAME|...]"                    \
+  "ps         [CONTAINER_NAME]"                        \
+  "set        CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+  "get        CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
 )
 
 function usage() {
@@ -73,6 +74,23 @@ case $DOCKER_CMD in
     else
       docker-compose stop
       docker-compose rm -f
+    fi
+    ;;
+  execAsRoot)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
+    CONTAINER_CMD=$3
+    ARGUMENTS=($@)
+    ARGUMENTS=(${ARGUMENTS[@]:3})
+    ARGUMENTS=$(echo ${ARGUMENTS[@]})
+    
+    if [ -z "$CONTAINER_CMD" ]; then
+      CONTAINER_CMD="bash"
+    fi
+
+    if [ ! -z "$ARGUMENTS" ]; then
+      docker-compose exec --user root $DOCKER_CONTAINER $CONTAINER_CMD -c "$ARGUMENTS"
+    else
+      docker-compose exec --user root $DOCKER_CONTAINER $CONTAINER_CMD
     fi
     ;;
   exec)
