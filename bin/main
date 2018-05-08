@@ -7,36 +7,38 @@ OPTS=`getopt -o h,st: --long help,script-type: -n 'parse-options' -- "$@"`
 eval set -- "$OPTS"
 
 #GENERIC_COMMANDS_START
-GENERIC_COMMANDS=(                                  \
-  "pull    [CONTAINER_NAME|...]"                    \
-  "up      [CONTAINER_NAME|...]"                    \
-  "start   [CONTAINER_NAME|...]"                    \
-  "restart [CONTAINER_NAME|...]"                    \
-  "stop    [CONTAINER_NAME|...]"                    \
-  "rm      [CONTAINER_NAME|...]"                    \
-  "clean   [CONTAINER_NAME|...]"                    \
-  "exec    CONTAINER_NAME COMMAND [ARGS]"           \
-  "logs    [CONTAINER_NAME|...]"                    \
-  "ps      [CONTAINER_NAME]"                        \
-  "set     CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
-  "get     CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
+GENERIC_COMMANDS=(                                     \
+  "pull       [CONTAINER_NAME|...]"                    \
+  "up         [CONTAINER_NAME|...]"                    \
+  "start      [CONTAINER_NAME|...]"                    \
+  "restart    [CONTAINER_NAME|...]"                    \
+  "stop       [CONTAINER_NAME|...]"                    \
+  "rm         [CONTAINER_NAME|...]"                    \
+  "clean      [CONTAINER_NAME|...]"                    \
+  "execAsRoot CONTAINER_NAME COMMAND [ARGS]"           \
+  "exec       CONTAINER_NAME COMMAND [ARGS]"           \
+  "logs       [CONTAINER_NAME|...]"                    \
+  "ps         [CONTAINER_NAME]"                        \
+  "set        CONTAINER_NAME FILE CONTAINER_DIRECTORY" \
+  "get        CONTAINER_NAME CONTAINER_FILE DIRECTORY" \
 )
 #GENERIC_COMMANDS_END
 
 #SPECIFIC_COMMANDS_START
-SPECIFIC_COMMANDS=(              \
-  "pull"                         \
-  "up"                           \
-  "start"                        \
-  "restart"                      \
-  "stop"                         \
-  "rm"                           \
-  "clean"                        \
-  "exec COMMAND [ARGS]"          \
-  "logs"                         \
-  "ps"                           \
-  "set FILE CONTAINER_DIRECTORY" \
-  "get CONTAINER_FILE DIRECTORY" \
+SPECIFIC_COMMANDS=(                     \
+  "pull"                                \
+  "up"                                  \
+  "start"                               \
+  "restart"                             \
+  "stop"                                \
+  "rm"                                  \
+  "clean"                               \
+  "execAsRoot COMMAND [ARGS]"           \
+  "exec       COMMAND [ARGS]"           \
+  "logs"                                \
+  "ps"                                  \
+  "set        FILE CONTAINER_DIRECTORY" \
+  "get        CONTAINER_FILE DIRECTORY" \
 )
 #SPECIFIC_COMMANDS_ENDS
 
@@ -92,6 +94,18 @@ case $DOCKER_CMD in
     ;;
   clean)
     $EXECUTION_PATH/docker-utils clean ${DOCKER_CONTAINER[@]}
+    ;;
+  execAsRoot)
+    DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
+    CONTAINER_CMD=$3
+    ARGUMENTS=($@)
+    ARGUMENTS=(${ARGUMENTS[@]:3})
+    
+    if [ ! -z "$ARGUMENTS" ]; then
+      $EXECUTION_PATH/docker-utils exec --user root $DOCKER_CONTAINER $CONTAINER_CMD ${ARGUMENTS[@]}
+    else
+      $EXECUTION_PATH/docker-utils exec --user root $DOCKER_CONTAINER $CONTAINER_CMD
+    fi
     ;;
   exec)
     DOCKER_CONTAINER=${DOCKER_CONTAINER[0]}
