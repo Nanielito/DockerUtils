@@ -102,9 +102,9 @@ case $DOCKER_CMD in
     ARGUMENTS=(${ARGUMENTS[@]:3})
     
     if [ ! -z "$ARGUMENTS" ]; then
-      $EXECUTION_PATH/docker-utils exec --user root $DOCKER_CONTAINER $CONTAINER_CMD ${ARGUMENTS[@]}
+      $EXECUTION_PATH/docker-utils execAsRoot $DOCKER_CONTAINER $CONTAINER_CMD ${ARGUMENTS[@]}
     else
-      $EXECUTION_PATH/docker-utils exec --user root $DOCKER_CONTAINER $CONTAINER_CMD
+      $EXECUTION_PATH/docker-utils execAsRoot $DOCKER_CONTAINER $CONTAINER_CMD
     fi
     ;;
   exec)
