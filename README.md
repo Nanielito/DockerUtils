@@ -46,6 +46,7 @@ $ bin/app restart
 $ bin/app stop
 $ bin/app rm
 $ bin/app clean
+$ bin/app execAsRoot COMMAND [ARGS]
 $ bin/app exec COMMAND [ARGS]
 $ bin/app logs
 $ bin/app ps
@@ -78,7 +79,7 @@ $ bin/app restart    [CONTAINER_NAME|...]
 $ bin/app stop       [CONTAINER_NAME|...]
 $ bin/app rm         [CONTAINER_NAME|...]
 $ bin/app clean      [CONTAINER_NAME|...]
-$ bin/app execAsRoot CONTAINER_NAME COMMAND [ARGS
+$ bin/app execAsRoot CONTAINER_NAME COMMAND [ARGS]
 $ bin/app exec       CONTAINER_NAME COMMAND [ARGS]
 $ bin/app logs       [CONTAINER_NAME|...]
 $ bin/app ps         [CONTAINER_NAME]
